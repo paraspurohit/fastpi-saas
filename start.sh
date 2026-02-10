@@ -14,14 +14,14 @@ mkdir -p certbot/conf
 
 # 2️⃣ Start FastAPI + NGINX (HTTP mode)
 echo "🐳 Starting FastAPI and NGINX..."
-docker compose up -d fastapi nginx
+sudo docker compose up -d fastapi nginx
 
 # 3️⃣ Check if certificate already exists
 if [ -d "certbot/conf/live/$DOMAIN" ]; then
   echo "🔒 SSL certificate already exists. Skipping certbot."
 else
   echo "🔐 Generating SSL certificate with Certbot..."
-  docker compose run --rm certbot certonly \
+  sudo docker compose run --rm certbot certonly \
     --webroot \
     --webroot-path=/var/www/certbot \
     --email "$EMAIL" \
@@ -32,8 +32,8 @@ fi
 
 # 4️⃣ Restart NGINX to apply HTTPS config
 echo "🔁 Restarting services..."
-docker compose down
-docker compose up -d
+sudo docker compose down
+sudo docker compose up -d
 
 # 5️⃣ Final status
 echo "✅ Deployment complete!"

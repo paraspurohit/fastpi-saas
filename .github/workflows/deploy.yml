@@ -31,8 +31,7 @@ jobs:
             git pull origin main
 
             echo "🐳 Restarting containers..."
-            chmod +x deploy.sh
-            ./deploy.sh
+            sh deploy.sh
 
             echo "✅ Deployment complete"
           EOF

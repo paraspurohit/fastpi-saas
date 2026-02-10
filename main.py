@@ -25,3 +25,5 @@ def read_root():
 
 if __name__ == "__main__":
     uvicorn.run(app)
+# alembic revision --autogenerate -m "baseline"
+# alembic upgrade head

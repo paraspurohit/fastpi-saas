@@ -28,8 +28,7 @@ jobs:
             cd ${{ secrets.EC2_PATH }}
 
             echo "📥 Pulling latest code..."
-            sudo git checkout main
-            sudo git pull origin main
+            git pull origin main
 
             echo "🐳 Restarting containers..."
             chmod +x deploy.sh

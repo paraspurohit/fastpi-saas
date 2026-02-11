@@ -1,4 +1,5 @@
-from pydantic_settings import BaseSettings
+import os
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -15,8 +16,10 @@ class Settings(BaseSettings):
     redis_host: str = "localhost"
     redis_port: int = 6379
 
-    class Config:
-        # TODO check which env file to use .env for local and .env.prod for production
-        env_file = '.env'
+    model_config = SettingsConfigDict(
+        env_file=os.getenv("ENV_FILE", ".env"),
+        extra="ignore"
+    )
+
 
 setting = Settings()

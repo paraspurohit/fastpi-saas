@@ -2,11 +2,13 @@ import time
 import logging
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
+from app.config.config import setting
 
 logger = logging.getLogger("api")
 
-RATE_LIMIT = 100
-RATE_WINDOW = 60
+RATE_LIMIT = setting.rate_limit
+RATE_WINDOW = setting.rate_window
+
 rate_limit_store = {}
 
 CACHE_TTL = 10

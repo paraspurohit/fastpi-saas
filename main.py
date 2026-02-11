@@ -9,13 +9,21 @@ from app.middleware.middleware import middleware_handler
 from app.routes import users, login
 from app.database.models import Base
 from app.database.db import engine
+from prometheus_fastapi_instrumentator import Instrumentator
+# from app.middleware.rate_limit import RateLimitMiddleware
+
 
 app = FastAPI()
+
+Instrumentator().instrument(app).expose(app)
 
 # Base.metadata.create_all(bind=engine)
 app.include_router(login.router)
 app.include_router(users.router)
 app.middleware("http")(middleware_handler)
+
+# app.add_middleware(RateLimitMiddleware)
+
 
 
 @app.get("/")

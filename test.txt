@@ -1,0 +1,25 @@
+# Search for anything holding 5432 using netstat
+sudo netstat -tulpn | grep :5432
+sudo ss -tulpn | grep :5432
+
+# Or check if a local Postgres service is running on Ubuntu
+sudo systemctl stop postgresql
+
+
+
+# Stop everything and remove the network bridge
+docker compose down
+
+# Prune unused networks (this often clears the "port in use" lie)
+docker network prune -f
+
+
+
+# 1. Stop everything and remove containers/networks
+docker compose down
+
+# 2. Build from scratch without using any old cached layers
+docker compose build --no-cache
+
+# 3. Start it up
+docker compose up

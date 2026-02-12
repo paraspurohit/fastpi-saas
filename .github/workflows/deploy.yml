@@ -32,33 +32,33 @@ jobs:
         run: |
           pytest -v --disable-warnings
 
-  deploy:
-    name: Deploy to EC2
-    runs-on: ubuntu-latest
-    needs: test   
+  # deploy:
+  #   name: Deploy to EC2
+  #   runs-on: ubuntu-latest
+  #   needs: test   
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+  #     - name: Setup SSH
+  #       run: |
+  #         mkdir -p ~/.ssh
+  #         echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+  #         chmod 600 ~/.ssh/id_rsa
+  #         ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to EC2
-        run: |
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-            cd ${{ secrets.EC2_PATH }}
+  #     - name: Deploy to EC2
+  #       run: |
+  #         ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+  #           set -e
+  #           cd ${{ secrets.EC2_PATH }}
 
-            echo "Pulling latest code..."
-            git pull origin main
+  #           echo "Pulling latest code..."
+  #           git pull origin main
 
-            echo "Restarting containers..."
-            sh deploy.sh
+  #           echo "Restarting containers..."
+  #           sh deploy.sh
 
-            echo "Deployment complete"
-          EOF
+  #           echo "Deployment complete"
+  #         EOF

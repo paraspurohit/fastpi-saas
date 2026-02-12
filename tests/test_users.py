@@ -1,7 +1,6 @@
 import pytest
 from app.schemas.response import ResponseUserSchema, UsersSchema
 from app.schemas.request import RegisterUserSchema
-from app.utils.login_util import hash_password
 from tests.factories import UserFactory
 
 from unittest.mock import patch
@@ -9,25 +8,25 @@ from app.core.enums import OTPPurpose
 
 
 def authenticate_user(client, email="testuser@example.com", password="password123"):
-    client.post("/users/create/", json={
-        "first_name": "Test",
-        "last_name": "User",
-        "email": email,
-        "password": password,
-    })
+    client.post(
+        "/users/create/",
+        json={
+            "first_name": "Test",
+            "last_name": "User",
+            "email": email,
+            "password": password,
+        },
+    )
 
     with patch("app.services.user_service.generate_otp") as mock_otp:
         mock_otp.return_value = "123456"
 
-        client.post("/users/otp/request/", json={
-            "email": email,
-            "purpose": OTPPurpose.EMAIL_VERIFICATION.value
-        })
+        client.post(
+            "/users/otp/request/",
+            json={"email": email, "purpose": OTPPurpose.EMAIL_VERIFICATION.value},
+        )
 
-    client.post("/users/otp/verify/", json={
-        "email": email,
-        "otp": "123456"
-    })
+    client.post("/users/otp/verify/", json={"email": email, "otp": "123456"})
 
     res = client.post(
         "/login/",
@@ -42,7 +41,6 @@ def authenticate_user(client, email="testuser@example.com", password="password12
     return {"Authorization": f"Bearer {token}"}
 
 
-
 def test_root(client):
     res = client.get("/")
     assert res.status_code == 200
@@ -54,7 +52,7 @@ def test_create_user_success(client):
         first_name="Test",
         last_name="User",
         email="newuser@test.com",
-        password="password123"
+        password="password123",
     )
     res = client.post("/users/create/", json=payload.model_dump())
     assert res.status_code == 201
@@ -71,7 +69,7 @@ def test_create_user_duplicate(client, db_session):
         first_name=user.first_name,
         last_name=user.last_name,
         email=user.email,
-        password="password123"
+        password="password123",
     )
     res = client.post("/users/create/", json=payload.model_dump())
     assert res.status_code == 409
@@ -123,16 +121,12 @@ def test_delete_user(client, db_session):
     ],
 )
 def test_update_user_details(client, db_session, first_name, last_name):
-    user = UserFactory()
     db_session.commit()
     headers = authenticate_user(client)
     res = client.put(
         "/users/update-detail",
-        json={
-            "first_name": first_name,
-            "last_name": last_name
-        },
-        headers=headers
+        json={"first_name": first_name, "last_name": last_name},
+        headers=headers,
     )
 
     # If your endpoint requires authentication,
@@ -140,20 +134,13 @@ def test_update_user_details(client, db_session, first_name, last_name):
     assert res.status_code in (202, 401)
 
 
-
-def test_update_password(client, db_session):
-    raw_password = "password123"
-    user = UserFactory(hashed_password=hash_password(raw_password))
-    db_session.commit()
+def test_update_password(client):
+    raw_password = "password123" 
     headers = authenticate_user(client)
-
     res = client.patch(
         "/users/update-password",
-        json={
-            "old_password": raw_password,
-            "new_password": "newpassword123"
-        },
-        headers=headers
+        json={"old_password": raw_password, "new_password": "newpassword123"},
+        headers=headers,
     )
 
     assert res.status_code in (202, 401)

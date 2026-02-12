@@ -7,7 +7,7 @@ class RegisterUserSchema(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
-    password: str 
+    password: str
 
 
 class UserUpdateSchema(BaseModel):

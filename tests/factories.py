@@ -9,7 +9,6 @@ fake = Faker()
 
 
 class BaseFactory(SQLAlchemyModelFactory):
-    
     class Meta:
         abstract = True
         sqlalchemy_session = None
@@ -17,7 +16,6 @@ class BaseFactory(SQLAlchemyModelFactory):
 
 
 class UserFactory(BaseFactory):
-
     class Meta:
         model = UserModel
 

@@ -10,15 +10,14 @@ class Settings(BaseSettings):
     database_username: str
     secret_key: str
     algorithm: str
-    rate_limit: int = 200
+    rate_limit: int = 100
     rate_window: int = 60
     cache_ttl: int = 10
     redis_host: str = "localhost"
     redis_port: int = 6379
 
     model_config = SettingsConfigDict(
-        env_file=os.getenv("ENV_FILE", ".env"),
-        extra="ignore"
+        env_file=os.getenv("ENV_FILE", ".env"), extra="ignore"
     )
 
 
